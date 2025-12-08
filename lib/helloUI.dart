@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'contract_linking.dart';
+
+class HelloUI extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var contractLink = Provider.of<ContractLinking>(context);
+    TextEditingController yourNameController = TextEditingController();
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Hello World DApp"),
+        centerTitle: true,
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: contractLink.isLoading
+            ? CircularProgressIndicator()
+            : SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Hello ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 52
+                          ),
+                        ),
+                        Text(
+                          contractLink.deployedName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 52,
+                            color: Colors.tealAccent
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    TextField(
+                      controller: yourNameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Your Name",
+                        hintText: "What is your name?",
+                        icon: Icon(Icons.drive_file_rename_outline)
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                      child: Text(
+                        'Set Name',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40, 
+                          vertical: 15
+                        ),
+                      ),
+                      onPressed: () {
+                        if (yourNameController.text.isNotEmpty) {
+                          contractLink.setName(yourNameController.text);
+                          yourNameController.clear();
+                        }
+                      },
+                    )
+                  ],
+                ),
+              ),
+        ),
+      ),
+    );
+  }
+}
